@@ -12,7 +12,7 @@ const generateToken = (id) => {
 
 const verifyToken = (token) => {
   try {
-    return jwt.verify(token, JWT_SECRET); // retorna { id, iat, exp }
+    return jwt.verify(token, JWT_SECRET);
   } catch {
     return null;
   }
