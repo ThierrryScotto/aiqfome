@@ -57,6 +57,20 @@ const getClientById = async (id) => {
   return await postgres.queryFirstOrNull(query, values);
 };
 
+const getClientByEmail = async (email) => {
+  const query = `
+    SELECT 
+      id, name, email, password
+    FROM 
+      clients
+    WHERE 
+      email = $1
+  `;
+
+  const values = [email];
+  return await postgres.queryFirstOrNull(query, values);
+};
+
 const deleteClient = async (id) => {
   const query = `
     DELETE FROM clients
@@ -70,7 +84,8 @@ const deleteClient = async (id) => {
 module.exports = {
   createClient,
   updateClient,
-  getClientById,
+  deleteClient,
   getClients,
-  deleteClient
+  getClientById,
+  getClientByEmail
 }

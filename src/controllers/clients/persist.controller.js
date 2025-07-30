@@ -1,7 +1,7 @@
 "use strict"
 
 // Database
-const userDB = require("../../services/db/_clients");
+const clientDB = require("../../services/db/_clients");
 
 // helpers
 const validator = require('../../helpers/validate.helpers');
@@ -33,7 +33,7 @@ const createClient = async (req, res) => {
 
     const hashedPassword = await encrypt.hashPassword(password);
 
-    const newClient = await userDB.createClient({...clientBody, password: hashedPassword});
+    const newClient = await clientDB.createClient({...clientBody, password: hashedPassword});
 
     const { password: _, ...addedClient } = newClient;
 
@@ -57,7 +57,7 @@ const updateClient = async (req, res) => {
   }
 
   try {
-    const existingClient = await userDB.getClientById(clientId);
+    const existingClient = await clientDB.getClientById(clientId);
 
     if (!existingClient) {
       return res.status(404).send({ message: `Client id = ${clientId} not found` });
@@ -66,7 +66,7 @@ const updateClient = async (req, res) => {
     const { password, ...clientBody } = validatorResult.instance;
     const hashedPassword = await encrypt.hashPassword(password);
 
-    const updatedClient = await userDB.updateClient(clientId, { ...clientBody, password: hashedPassword });
+    const updatedClient = await clientDB.updateClient(clientId, { ...clientBody, password: hashedPassword });
 
     const { password: _, ...client } = updatedClient;
 
@@ -81,13 +81,13 @@ const deleteClient = async (req, res) => {
   const { clientId } = req.params;
 
   try {
-    const existingClient = await userDB.getClientById(clientId);
+    const existingClient = await clientDB.getClientById(clientId);
 
     if (!existingClient) {
       return res.status(404).send({ message: `Client id = ${clientId} not found` });
     }
 
-    await userDB.deleteClient(clientId);
+    await clientDB.deleteClient(clientId);
 
     return res.status(204).send();
   } catch (err) {

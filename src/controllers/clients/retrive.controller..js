@@ -1,10 +1,10 @@
 "use strict"
 
 // Database
-const userDB = require("../../services/db/_clients");
+const clientDB = require("../../services/db/_clients");
 
 const getClients = async (req, res) => {
-  const clients = await userDB.getClients();
+  const clients = await clientDB.getClients();
 
   if (!clients) {
     return res.status(404).send({ message: "No Client found" });
@@ -16,7 +16,7 @@ const getClients = async (req, res) => {
 const getClientById = async (req, res) => {
   const { clientId } = req.params;
 
-  const client = await userDB.getClientById(clientId);
+  const client = await clientDB.getClientById(clientId);
 
   if (!client) {
     return res.status(404).send({ message: `Client id = ${clientId} not found` });
