@@ -13,7 +13,7 @@ const _validateBody = (body) => {
     id: '/CreateFavoriteProduct',
     type: 'object',
     properties: {
-      clientId: { type: 'number', },
+      clientId: { type: 'string', pattern: '^[0-9]+$' },
       productId: { type: 'number' }
     },
     required: ['clientId', 'productId']
@@ -22,13 +22,14 @@ const _validateBody = (body) => {
 };
 
 const createFavoriteProduct = async (req, res) => {
-  const validatorResult = _validateBody(req.body);
+  const { productId } = req.body;
+  const { clientId } = req.params;
+
+  const validatorResult = _validateBody({ clientId, productId });
 
   if (validatorResult.errors.length > 0) {
     return res.status(400).send({ message: `Invalid request body, error = ${validatorResult.errors}`});
   }
-
-  const { clientId, productId } = validatorResult.instance;
 
   try {
     const client = await clientDB.getClientById(clientId);
@@ -43,7 +44,7 @@ const createFavoriteProduct = async (req, res) => {
       return res.status(400).send({ message: "Invalid product" });
     }
 
-    const existingFavorite = await favoriteProductDB.getFavoriteProductByClientId(clientId, productId);
+    const existingFavorite = await favoriteProductDB.getFavoriteProductByIds(clientId, productId);
 
     if (existingFavorite) {
       return res.status(409).send({ message: "Product already added to favorites" });
@@ -59,7 +60,7 @@ const createFavoriteProduct = async (req, res) => {
       review_count: product.rating?.count || null,
     };
 
-    const addedFavorite = await favoriteProductDB.createFavorite(newFavorite);
+    const addedFavorite = await favoriteProductDB.createFavoriteProduct(newFavorite);
 
     return res.status(201).send(addedFavorite);
   } catch (err) {
