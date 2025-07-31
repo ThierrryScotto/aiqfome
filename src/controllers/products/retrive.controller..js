@@ -6,8 +6,6 @@ const { getAllProductsFromExternalApi } = require('../../helpers/axios.helpers')
 
 const getProducts = async (req, res) => {
   try {
-    console.log("### HERE ###");
-
     const response = await getAllProductsFromExternalApi();
     const products = response.data;
 
