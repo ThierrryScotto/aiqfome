@@ -5,7 +5,9 @@ require('dotenv').config();
 
 const getProductFromExternalApi = async (productId) => {
   try {
-    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/${productId}`);
+    const response = await axios.get(`${process.env.EXTERNAL_API_URL}/${productId}`,
+      { timeout: 10000 }
+    );
     const product = response.data;
 
     if (!product || !product.id) {
